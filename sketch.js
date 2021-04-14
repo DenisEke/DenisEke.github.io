@@ -17,7 +17,7 @@ state 3 = final insights
 let state = 0;
 
 function setup() {
-  createCanvas(500, 500);
+  createCanvas(windowWidth, windowHeight);
 }
 
 //this function is when we want to change the screen from black to red
