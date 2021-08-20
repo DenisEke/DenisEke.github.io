@@ -33483,6 +33483,9 @@ var Graph = function() {
     function Graph1(nodes, links) {
         this.nodes = nodes;
         this.links = links;
+        if (this.nodes.findIndex(function(node) {
+            return node.state === NodeState.VISITED;
+        }) === -1) this.nodes[Math.floor(Math.random() * this.nodes.length)].state = NodeState.VISITED;
     }
     Graph1.prototype.getNode = function(id) {
         for(var i = 0; i < this.nodes.length; i++){
