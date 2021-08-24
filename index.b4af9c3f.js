@@ -949,7 +949,7 @@ function App() {
     return(/*#__PURE__*/ _react.createElement("div", {
         className: "w-full p-12 flex flex-row justify-center h-auto"
     }, /*#__PURE__*/ _react.createElement("div", {
-        className: "w-8/12 bg-white rounded-md shadow-md"
+        className: "lg:w-6/12 md:w-8/12 bg-white rounded-md shadow-md"
     }, /*#__PURE__*/ _react.createElement(_primComponentDefault.default, null))));
 }
 _c = App;
@@ -21956,16 +21956,30 @@ var graphConfig = {
 };
 function PrimComponent() {
     _s();
-    var _a = _usePrims.usePrim(), graphData = _a[0], nextStep = _a[1], clickLink = _a[2], reset = _a[3];
+    var _a = _usePrims.usePrim(), graphData = _a[0], nextStep = _a[1], clickLink = _a[2], reset = _a[3], error = _a[4], solved = _a[5], chancesLeft = _a[6], gameOver = _a[7];
     return(/*#__PURE__*/ _react.createElement("div", {
         className: "w-full p-4 h-3/6 flex flex-col gap-4"
     }, /*#__PURE__*/ _react.createElement("div", {
         className: "w-full text-center text-3xl"
     }, "Prims Algorithm"), /*#__PURE__*/ _react.createElement("div", {
-        className: "w-full text-left text-sm"
-    }, /*#__PURE__*/ _react.createElement("strong", null, "This paragraph can be an explanation of Prims Algorithm or we can put your lecture here"), " ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."), /*#__PURE__*/ _react.createElement("div", {
-        className: "w-full text-left text-xl"
-    }, "Test your understanding - Just click the Links in the right order:"), /*#__PURE__*/ _react.createElement(_reactD3Graph.Graph, {
+        className: "w-full text-left"
+    }, /*#__PURE__*/ _react.createElement("div", {
+        className: "w-full text-xl font-medium"
+    }, "How does Prims Algorithm work?"), "ToDo: Add description!"), /*#__PURE__*/ _react.createElement("div", {
+        className: "w-full text-left"
+    }, /*#__PURE__*/ _react.createElement("div", {
+        className: "w-full text-xl font-medium"
+    }, "How do I use this tool?"), "Click the connections between the nodes in the order of prims algorithm. You can make 3 mistakes.", /*#__PURE__*/ _react.createElement("br", null), /*#__PURE__*/ _react.createElement("br", null), /*#__PURE__*/ _react.createElement("span", {
+        className: "bg-primary font-bold ml-4"
+    }, "Dark green"), " indicates visited Nodes and Links.", /*#__PURE__*/ _react.createElement("br", null), /*#__PURE__*/ _react.createElement("span", {
+        className: "bg-primary-lightest font-bold ml-4"
+    }, "Light green"), " indicates not visited Nodes and Links.", /*#__PURE__*/ _react.createElement("br", null), /*#__PURE__*/ _react.createElement("span", {
+        className: "bg-error font-bold ml-4"
+    }, "Red"), " indicates mistakes.", /*#__PURE__*/ _react.createElement("br", null)), gameOver ? /*#__PURE__*/ _react.createElement("div", {
+        className: "w-full p-8 border-8 border-red-300 rounded-lg text-red-800 font-bold"
+    }, "No more chances left. Reset (Reason: ", error, ")") : /*#__PURE__*/ _react.createElement("div", {
+        className: "text-center"
+    }, "You have ", chancesLeft, " mistakes left."), /*#__PURE__*/ _react.createElement(_reactD3Graph.Graph, {
         className: "flex-grow",
         id: "graph-id" // id is mandatory
         ,
@@ -21975,15 +21989,16 @@ function PrimComponent() {
             console.log(link);
         },
         onClickLink: clickLink
-    }), /*#__PURE__*/ _react.createElement("div", {
+    }), !gameOver && error ? /*#__PURE__*/ _react.createElement("div", {
+        className: "w-full p-8 border-8 border-red-300 rounded-lg text-red-800 font-bold"
+    }, error) : null, solved ? /*#__PURE__*/ _react.createElement("div", {
+        className: "w-full p-8 border-8 border-primary rounded-lg text-primary font-bold"
+    }, "Solved! Congratulations!") : null, /*#__PURE__*/ _react.createElement("div", {
         className: "flex flex-row flex-end justify-end gap-3"
     }, /*#__PURE__*/ _react.createElement("button", {
         className: "bg-warning rounded px-3 py-2 w-2/12 ",
         onClick: reset
-    }, "Reset"), /*#__PURE__*/ _react.createElement("button", {
-        className: "bg-primary rounded px-3 py-2 w-2/12 ",
-        onClick: nextStep
-    }, "Next"))));
+    }, "Reset"))));
 }
 exports.default = PrimComponent;
 _s(PrimComponent, "rZ1m+nytmuChc6KOlkgha8PUFpM=", false, function() {
@@ -33478,14 +33493,16 @@ parcelHelpers.export(exports, "usePrim", ()=>usePrim
 );
 var _react = require("react");
 var _config = require("../config");
+var _models = require("./models");
+var _defaultConfig = require("./default.config");
 var _s = $RefreshSig$();
 var Graph = function() {
     function Graph1(nodes, links) {
         this.nodes = nodes;
         this.links = links;
         if (this.nodes.findIndex(function(node) {
-            return node.state === NodeState.VISITED;
-        }) === -1) this.nodes[Math.floor(Math.random() * this.nodes.length)].state = NodeState.VISITED;
+            return node.state === _models.NodeState.VISITED;
+        }) === -1) this.nodes[Math.floor(Math.random() * this.nodes.length)].state = _models.NodeState.VISITED;
     }
     Graph1.prototype.getNode = function(id) {
         for(var i = 0; i < this.nodes.length; i++){
@@ -33507,20 +33524,20 @@ var Graph = function() {
                 x: node.x,
                 y: node.y - 50,
                 id: node.id,
-                color: node.state === NodeState.VISITED ? _config.colorTheme.primary.DEFAULT : _config.colorTheme.primary.lightest
+                color: node.state === _models.NodeState.VISITED ? _config.colorTheme.primary.DEFAULT : _config.colorTheme.primary.lightest
             });
         }
         for(var i = 0; i < this.links.length; i++){
             var link = this.links[i];
             var color = _config.colorTheme.primary.lightest;
             switch(link.state){
-                case LinkState.POSSIBLE:
+                case _models.LinkState.POSSIBLE:
                     color = _config.colorTheme.primary.darker;
                     break;
-                case LinkState.VISITED:
+                case _models.LinkState.VISITED:
                     color = _config.colorTheme.primary.DEFAULT;
                     break;
-                case LinkState.ERROR:
+                case _models.LinkState.ERROR:
                     color = _config.colorTheme.error;
                     break;
             }
@@ -33534,265 +33551,188 @@ var Graph = function() {
         }
         return componentData;
     };
-    return Graph1;
-}();
-var LinkState;
-(function(LinkState1) {
-    LinkState1[LinkState1["POSSIBLE"] = 0] = "POSSIBLE";
-    LinkState1[LinkState1["VISITED"] = 1] = "VISITED";
-    LinkState1[LinkState1["DEFAULT"] = 2] = "DEFAULT";
-    LinkState1[LinkState1["ERROR"] = 3] = "ERROR";
-})(LinkState || (LinkState = {
-}));
-var NodeState;
-(function(NodeState1) {
-    NodeState1[NodeState1["VISITED"] = 0] = "VISITED";
-    NodeState1[NodeState1["DEFAULT"] = 1] = "DEFAULT";
-})(NodeState || (NodeState = {
-}));
-var ConnectionState;
-(function(ConnectionState1) {
-    ConnectionState1[ConnectionState1["POSSIBLE"] = 0] = "POSSIBLE";
-    ConnectionState1[ConnectionState1["VISITED"] = 1] = "VISITED";
-})(ConnectionState || (ConnectionState = {
-}));
-var DEFAULT_NODES = [
-    {
-        x: 100,
-        y: 100,
-        id: "A"
-    },
-    {
-        x: 200,
-        y: 100,
-        id: "B"
-    },
-    {
-        x: 500,
-        y: 100,
-        id: "C"
-    },
-    {
-        x: 200,
-        y: 200,
-        id: "D"
-    },
-    {
-        x: 300,
-        y: 200,
-        id: "E"
-    },
-    {
-        x: 700,
-        y: 200,
-        id: "F"
-    },
-    {
-        x: 100,
-        y: 300,
-        id: "G"
-    },
-    {
-        x: 300,
-        y: 250,
-        id: "H"
-    },
-    {
-        x: 300,
-        y: 350,
-        id: "J"
-    },
-    {
-        x: 300,
-        y: 250,
-        id: "F"
-    },
-    {
-        x: 500,
-        y: 300,
-        id: "I"
-    }
-];
-var DEFAULT_LINKS = [
-    {
-        connection: [
-            "A",
-            "G"
-        ],
-        weight: 5
-    },
-    {
-        connection: [
-            "A",
-            "B"
-        ],
-        weight: 10
-    },
-    {
-        connection: [
-            "B",
-            "E"
-        ],
-        weight: 15
-    },
-    {
-        connection: [
-            "B",
-            "C"
-        ],
-        weight: 25
-    },
-    {
-        connection: [
-            "C",
-            "I"
-        ],
-        weight: 15
-    },
-    {
-        connection: [
-            "C",
-            "H"
-        ],
-        weight: 10
-    },
-    {
-        connection: [
-            "D",
-            "E"
-        ],
-        weight: 5
-    },
-    {
-        connection: [
-            "G",
-            "D"
-        ],
-        weight: 15
-    },
-    {
-        connection: [
-            "H",
-            "J"
-        ],
-        weight: 10
-    },
-    {
-        connection: [
-            "I",
-            "J"
-        ],
-        weight: 10
-    },
-    {
-        connection: [
-            "H",
-            "G"
-        ],
-        weight: 20
-    }, 
-];
-function usePrim() {
-    _s();
-    var _a = _react.useState(new Graph(DEFAULT_NODES, DEFAULT_LINKS)), stateGraph = _a[0], setGraph = _a[1];
-    var clickLink = _react.useCallback(function(source, target) {
-        var graph = new Graph(stateGraph.nodes, stateGraph.links);
-        var visited = graph.getNodes(function(node) {
-            return node.state === NodeState.VISITED;
-        });
-        if (visited.length === 0) {
-            graph.links.forEach(function(link) {
-                if (link.connection.includes(source) && link.connection.includes(target)) {
-                    link.state = LinkState.VISITED;
-                    graph.getNodes(function(node) {
-                        return node.id === source || node.id === target;
-                    }).forEach(function(node) {
-                        return node.state = NodeState.VISITED;
-                    });
+    Graph1.prototype.getVisitedNodes = function() {
+        var visitedNodes = [];
+        for(var i = 0; i < this.nodes.length; i++)if (this.nodes[i].state === _models.NodeState.VISITED) visitedNodes.push(this.nodes[i]);
+        return visitedNodes;
+    };
+    Graph1.prototype.getConnectedLinks = function(visitedNodes) {
+        var res = [];
+        for(var i = 0; i < this.links.length; i++){
+            var link = this.links[i];
+            for(var j = 0; j < visitedNodes.length; j++){
+                var node = visitedNodes[j];
+                if (link.connection.includes(node.id)) {
+                    res.push(link);
+                    break;
                 }
-            });
-            setGraph(graph);
-            return;
-        }
-        var possible = getPossible(graph, visited);
-        for(var i = 0; i < possible.length; i++){
-            var current = possible[i];
-            if (current.connection.includes(source) && current.connection.includes(target)) {
-                current.state = LinkState.VISITED;
-                graph.getNodes(function(node) {
-                    return node.id === source || node.id === target;
-                }).forEach(function(node) {
-                    return node.state = NodeState.VISITED;
-                });
-                setGraph(graph);
-                return;
             }
         }
-        possible.forEach(function(link) {
-            link.state = LinkState.POSSIBLE;
+        return res;
+    };
+    Graph1.prototype.refresh = function() {
+        for(var li = 0; li < this.links.length; li++)if (this.links[li].state !== _models.LinkState.VISITED) this.links[li].state = _models.LinkState.DEFAULT;
+        for(var ni = 0; ni < this.nodes.length; ni++)if (this.nodes[ni].state !== _models.NodeState.VISITED) this.nodes[ni].state = _models.NodeState.DEFAULT;
+    };
+    return Graph1;
+}();
+function usePrim() {
+    _s();
+    var _a = _react.useState(new Graph(_defaultConfig.DEFAULT_NODES, _defaultConfig.getDefaultLinks())), stateGraph = _a[0], setGraph = _a[1];
+    var _b = _react.useState(null), error = _b[0], setError = _b[1];
+    var _c = _react.useState(false), solved = _c[0], setSolved = _c[1];
+    var _d = _react.useState(3), chancesLeft = _d[0], setChancesLeft = _d[1];
+    var _e = _react.useState(false), gameOver = _e[0], setGameOver = _e[1];
+    _react.useEffect(function() {
+        console.log("use effect: ", chancesLeft);
+        if (chancesLeft === 0) {
+            console.log("ZERO");
+            var graph = new Graph(stateGraph.nodes, stateGraph.links);
+            graph.links.forEach(function(link) {
+                return link.state === _models.LinkState.ERROR;
+            });
+            setGraph(graph);
+            setGameOver(true);
+        }
+    }, [
+        chancesLeft
+    ]);
+    var clickLink = _react.useCallback(function(source, target) {
+        if (gameOver) {
+            alert("GAME OVER. RESET");
+            return;
+        }
+        var graph = new Graph(stateGraph.nodes, stateGraph.links);
+        if (error === null) setChancesLeft(3);
+        //remove errors and highlights
+        graph.refresh();
+        var visitedNodes = graph.getVisitedNodes();
+        var connectedLinks = graph.getConnectedLinks(visitedNodes);
+        var clickedLink = graph.links[graph.links.findIndex(function(link) {
+            return link.connection.includes(source) && link.connection.includes(target);
+        })];
+        if (clickedLink.state === _models.LinkState.VISITED) {
+            setError("You already visited this Link");
+            return;
+        }
+        var index = connectedLinks.findIndex(function(link) {
+            return link.connection.includes(source) && link.connection.includes(target);
         });
-        graph.links.forEach(function(link) {
-            if (link.connection.includes(source) && link.connection.includes(target)) link.state = LinkState.ERROR;
-        });
+        if (index === -1) {
+            clickedLink.state = _models.LinkState.ERROR;
+            setGraph(graph);
+            setError("The Link is not connected to any of the visited Nodes");
+            setChancesLeft(chancesLeft - 1);
+            return;
+        }
+        var connectedLinksPossible = [];
+        for(var i = 0; i < connectedLinks.length; i++){
+            var link = connectedLinks[i];
+            var sourceInside = false;
+            var targetInside = false;
+            for(var i_1 = 0; i_1 < visitedNodes.length; i_1++){
+                if (visitedNodes[i_1].id === link.connection[0]) sourceInside = true;
+                if (visitedNodes[i_1].id === link.connection[1]) targetInside = true;
+                if (targetInside && sourceInside) break;
+            }
+            if (!(targetInside && sourceInside)) connectedLinksPossible.push(link);
+        }
+        if (connectedLinksPossible.findIndex(function(link) {
+            return link.connection.includes(source) && link.connection.includes(target);
+        }) === -1) {
+            clickedLink.state = _models.LinkState.ERROR;
+            setGraph(graph);
+            setChancesLeft(chancesLeft - 1);
+            setError("The Link is not connected to an unvisited Node");
+            return;
+        }
+        var smallestPossible = connectedLinksPossible.sort(function(a, b) {
+            return a.weight - b.weight;
+        })[0].weight;
+        if (clickedLink.weight > smallestPossible) {
+            clickedLink.state = _models.LinkState.ERROR;
+            setGraph(graph);
+            setChancesLeft(chancesLeft - 1);
+            setError("This Link does not have the smallest weight");
+            return;
+        }
+        clickedLink.state = _models.LinkState.VISITED;
+        for(var i = 0; i < graph.nodes.length; i++)if (clickedLink.connection.includes(graph.nodes[i].id)) graph.nodes[i].state = _models.NodeState.VISITED;
+        if (visitedNodes.length === graph.nodes.length - 1) setSolved(true);
+        setError(null);
         setGraph(graph);
-    }, []);
+        return;
+    }, [
+        error,
+        chancesLeft,
+        gameOver,
+        stateGraph
+    ]);
     var nextStep = _react.useCallback(function() {
         var graph = new Graph(stateGraph.nodes, stateGraph.links);
         graph.links.forEach(function(link) {
-            if (link.state === LinkState.POSSIBLE) link.state = LinkState.DEFAULT;
+            if (link.state === _models.LinkState.POSSIBLE) link.state = _models.LinkState.DEFAULT;
         });
         var visited = graph.nodes.filter(function(node) {
-            return node.state === NodeState.VISITED;
+            return node.state === _models.NodeState.VISITED;
         });
         if (visited.length === graph.nodes.length) alert("Solved!");
         if (visited.length === 0) {
             var randomNode = graph.nodes[Math.floor(Math.random() * graph.nodes.length)];
-            randomNode.state = NodeState.VISITED;
+            randomNode.state = _models.NodeState.VISITED;
             visited.push(randomNode);
         }
         var possibleConnections = getPossible(graph, visited);
         console.log("pos: ", possibleConnections);
-        possibleConnections[0].state = LinkState.VISITED;
+        possibleConnections[0].state = _models.LinkState.VISITED;
         possibleConnections[0].connection.forEach(function(id) {
             var node = graph.getNode(id);
-            if (node) node.state = NodeState.VISITED;
+            if (node) node.state = _models.NodeState.VISITED;
         });
         console.log(graph);
         setGraph(graph);
     }, []);
     var reset = _react.useCallback(function() {
-        var graph = new Graph(DEFAULT_NODES, DEFAULT_LINKS);
+        var graph = new Graph(_defaultConfig.DEFAULT_NODES, _defaultConfig.getDefaultLinks());
         graph.nodes.forEach(function(node) {
-            node.state = NodeState.DEFAULT;
+            node.state = _models.NodeState.DEFAULT;
         });
         graph.links.forEach(function(link) {
-            link.state = LinkState.DEFAULT;
+            link.state = _models.LinkState.DEFAULT;
         });
         setGraph(graph);
+        setSolved(false);
+        setError(null);
+        setChancesLeft(3);
+        setGameOver(false);
     }, []);
     return [
         stateGraph,
         nextStep,
         clickLink,
-        reset
+        reset,
+        error,
+        solved,
+        chancesLeft,
+        gameOver
     ];
 }
-_s(usePrim, "5JjCou7yhZc8JrOnG6Wi4wPcqZA=");
+_s(usePrim, "bKIvEXtM/SGN8jQNRTxlAY8RSpA=");
 function getPossible(graph, visited) {
     var possible = [];
     for(var i = 0; i < visited.length; i++){
         var node = visited[i];
         var notVisitedLinks = graph.links.filter(function(link) {
-            return link.state !== LinkState.VISITED;
+            return link.state !== _models.LinkState.VISITED;
         });
         for(var k = 0; k < notVisitedLinks.length; k++){
             var link = notVisitedLinks[k];
             if (link.connection[0] === node.id) {
                 var node_1 = graph.getNode(link.connection[1]);
-                if ((node_1 === null || node_1 === void 0 ? void 0 : node_1.state) !== NodeState.VISITED) possible.push(link);
+                if ((node_1 === null || node_1 === void 0 ? void 0 : node_1.state) !== _models.NodeState.VISITED) possible.push(link);
             } else if (link.connection[1] === node.id) {
                 var node_2 = graph.getNode(link.connection[0]);
-                if ((node_2 === null || node_2 === void 0 ? void 0 : node_2.state) !== NodeState.VISITED) possible.push(link);
+                if ((node_2 === null || node_2 === void 0 ? void 0 : node_2.state) !== _models.NodeState.VISITED) possible.push(link);
             }
         }
     }
@@ -33809,7 +33749,7 @@ function getPossible(graph, visited) {
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react":"6TuXu","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"5V79J","../config":"f3Qp1"}],"5V79J":[function(require,module,exports) {
+},{"react":"6TuXu","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"5V79J","../config":"f3Qp1","./models":"g5LLM","./default.config":"h8d8Q"}],"5V79J":[function(require,module,exports) {
 "use strict";
 var Refresh = require('react-refresh/runtime');
 function debounce(func, delay) {
@@ -33945,6 +33885,186 @@ var colorTheme = {
     "warning-darker": "#F9CB6D",
     error: "#F56A48"
 };
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"g5LLM":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "LinkState", ()=>LinkState
+);
+parcelHelpers.export(exports, "NodeState", ()=>NodeState
+);
+var LinkState;
+(function(LinkState1) {
+    LinkState1[LinkState1["POSSIBLE"] = 0] = "POSSIBLE";
+    LinkState1[LinkState1["VISITED"] = 1] = "VISITED";
+    LinkState1[LinkState1["DEFAULT"] = 2] = "DEFAULT";
+    LinkState1[LinkState1["ERROR"] = 3] = "ERROR";
+})(LinkState || (LinkState = {
+}));
+var NodeState;
+(function(NodeState1) {
+    NodeState1[NodeState1["VISITED"] = 0] = "VISITED";
+    NodeState1[NodeState1["DEFAULT"] = 1] = "DEFAULT";
+})(NodeState || (NodeState = {
+}));
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"h8d8Q":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "DEFAULT_NODES", ()=>DEFAULT_NODES
+);
+parcelHelpers.export(exports, "getDefaultLinks", ()=>getDefaultLinks
+);
+var DEFAULT_NODES = [
+    {
+        x: 100,
+        y: 100,
+        id: "A"
+    },
+    {
+        x: 200,
+        y: 100,
+        id: "B"
+    },
+    {
+        x: 500,
+        y: 100,
+        id: "C"
+    },
+    {
+        x: 200,
+        y: 200,
+        id: "D"
+    },
+    {
+        x: 300,
+        y: 200,
+        id: "E"
+    },
+    {
+        x: 400,
+        y: 200,
+        id: "F"
+    },
+    {
+        x: 100,
+        y: 300,
+        id: "G"
+    },
+    {
+        x: 300,
+        y: 250,
+        id: "H"
+    },
+    {
+        x: 300,
+        y: 350,
+        id: "I"
+    },
+    {
+        x: 500,
+        y: 300,
+        id: "J"
+    }
+];
+function getDefaultLinks() {
+    return [
+        {
+            connection: [
+                "A",
+                "G"
+            ],
+            weight: getRandomWeight()
+        },
+        {
+            connection: [
+                "A",
+                "B"
+            ],
+            weight: getRandomWeight()
+        },
+        {
+            connection: [
+                "B",
+                "E"
+            ],
+            weight: getRandomWeight()
+        },
+        {
+            connection: [
+                "B",
+                "C"
+            ],
+            weight: getRandomWeight()
+        },
+        {
+            connection: [
+                "C",
+                "F"
+            ],
+            weight: getRandomWeight()
+        },
+        {
+            connection: [
+                "C",
+                "J"
+            ],
+            weight: getRandomWeight()
+        },
+        {
+            connection: [
+                "D",
+                "E"
+            ],
+            weight: getRandomWeight()
+        },
+        {
+            connection: [
+                "G",
+                "D"
+            ],
+            weight: getRandomWeight()
+        },
+        {
+            connection: [
+                "H",
+                "J"
+            ],
+            weight: getRandomWeight()
+        },
+        {
+            connection: [
+                "F",
+                "H"
+            ],
+            weight: getRandomWeight()
+        },
+        {
+            connection: [
+                "I",
+                "J"
+            ],
+            weight: getRandomWeight()
+        },
+        {
+            connection: [
+                "I",
+                "H"
+            ],
+            weight: getRandomWeight()
+        },
+        {
+            connection: [
+                "H",
+                "G"
+            ],
+            weight: getRandomWeight()
+        }, 
+    ];
+}
+function getRandomWeight() {
+    return (1 + Math.floor(Math.random() * 4)) * 5;
+}
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}]},["2rAXy","czkC5","iqQLF"], "iqQLF", "parcelRequire94c2")
 
